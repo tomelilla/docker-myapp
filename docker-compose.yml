@@ -37,3 +37,22 @@ myapp-php-fpm:
     - ./php-fpm/php-ini-overrides.ini:/etc/php/7.1/fpm/conf.d/99-overrides.ini
   links:
     - myapp-mysql
+
+myapp-phpmyadmin:
+  image: phpmyadmin/phpmyadmin
+  ports:
+    - 8080:80
+  environment:
+    - PMA_HOST=myapp-mysql
+  links:
+    - myapp-mysql
+
+quasar:
+  build:
+    context: .
+    target: 'develop-stage'
+  ports:
+    - '4000:4000'
+  volumes:
+    - '../quasar:/app'
+  command: /bin/sh -c "yarn && quasar dev"
