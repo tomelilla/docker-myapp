@@ -1,6 +1,8 @@
 # FROM php:fpm
 FROM php:7.2-fpm-buster
 
+RUN rm /etc/apt/preferences.d/no-debian-php
+
 RUN apt-get update
 
 RUN apt-get install -y git libzip-dev zip unzip \
@@ -12,7 +14,7 @@ RUN apt-get install -y libicu-dev \
     && docker-php-ext-configure intl \
     && docker-php-ext-install intl
 
-RUN apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev
+RUN apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev php-json
 # && docker-php-ext-configure gd --with-freetype --with-jpeg \
 # && docker-php-ext-install gd
 

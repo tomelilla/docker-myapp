@@ -5,6 +5,7 @@
 myapp-mysql:
   image: mysql:5.7
   container_name: myapp-mysql
+  hostname: myapp-mysql
   volumes:
     - ../mysql:/var/lib/mysql
     - ./mysql/my.cnf:/etc/mysql/my.cnf
@@ -46,13 +47,3 @@ myapp-phpmyadmin:
     - PMA_HOST=myapp-mysql
   links:
     - myapp-mysql
-
-quasar:
-  build:
-    context: .
-    target: 'develop-stage'
-  ports:
-    - '4000:4000'
-  volumes:
-    - '../quasar:/app'
-  command: /bin/sh -c "yarn && quasar dev"
