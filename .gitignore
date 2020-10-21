@@ -1,2 +1,3 @@
-src/
-logs/
+src
+logs/*
+node_modules
