@@ -5,7 +5,7 @@ This setup spools up the following containers
 
 * **mysql** (5.7)
 * **nginx**
-* **php-fpm** (php 7.1)
+* **php-fpm** (php 7.3)
 * **mailhog** (smtp server for testing)
 
 The guide will walk you thru the following things
@@ -21,7 +21,7 @@ The guide will walk you thru the following things
 For those looking to get started in `60 sec` using just the defaults (which are fine for dev) do the following:
 
 1. Download the ZIP file for this repo
-1. Create the following folder structure 
+1. Create the following folder structure
  * Put your CakePHP app inside the `cakephp` folder
  * and the files from this repo into the `docker` folder
 
@@ -32,29 +32,29 @@ For those looking to get started in `60 sec` using just the defaults (which are 
 	        cakephp
 	            .. put your cake app in here ..
 	```
-	
+
 	If you want to do that all from commandline...
-	
+
 	```bash
     cd ~/your/local/DEV/folder
     mkdir myapp
     cd myapp
     mkdir cakephp
 	```
-	
+
 	And then to simultaneously download the latest master file, unpack it, and stuff it into a docker folder, run this...
-	
+
 	```bash
     curl -Lo cakephp-docker.zip https://github.com/cwbit/cakephp-docker/archive/master.zip && \
     unzip cakephp-docker.zip && \
     mv cakephp-docker-master docker
-	```	
+	```
 3. From commandline, `cd` into the `docker` directory and run `docker-compose up`
 
 	```bash
 	$ cd /path/to/somefolder/docker
 	$ docker-compose up
-	
+
 	Starting myapp-mysql
 	Starting myapp-mailhog
 	Starting myapp-php-fpm
@@ -122,7 +122,7 @@ Lastly, **Find/Replace** `myapp` with the name of your app.
 
 > **WHY?** by default the files are set to name the containers based on your app prefix. By default this is `myapp`.
 > A find/replace on `myapp` is safe and will allow you to customize the names of the containers
-> 
+>
 > e.g. myapp-mysql, myapp-php-fpm, myapp-nginx, myapp-mailhog
 
 **Build and Run your Containers**
@@ -132,12 +132,12 @@ cd /path/to/your/app/docker
 docker-compose -up
 ```
 
-That's it. You can now access your CakePHP app at 
+That's it. You can now access your CakePHP app at
 
 `localhost:8180`
 
 > **tip**: start docker-compose with `-d` to run (or re-run changed containers) in the background.
-> 
+>
 > `docker-compose up -d`
 
 **Connecting to your database**
@@ -151,7 +151,7 @@ password : myapp
 database : myapp
 ```
 
-You can access your MySQL database (with your favorite GUI app) on 
+You can access your MySQL database (with your favorite GUI app) on
 
 `localhost:8106`
 
@@ -245,7 +245,7 @@ Set up your `app/config.php` with the following
 	        'timeout' => 30,
 	      ],
 	      ...
-```          
+```
 
 You can access the **Web GUI** (using the defaults) for mailhog at
 
@@ -262,7 +262,7 @@ If you've never worked with Docker before they have some super easy ways to inst
 
 You can download the (free) community edition here [https://www.docker.com/community-edition#/download]()
 
-**Cloud Hosting Docker Applications** 
+**Cloud Hosting Docker Applications**
 
 [DigitalOcean](https://m.do.co/c/640e75c994b4) has been super reliable for us as a host and has a one-click deploy of a  docker host.
 
