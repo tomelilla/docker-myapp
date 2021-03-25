@@ -57,6 +57,7 @@ myapp-php-fpm:
     - ./php-fpm/php-ini-overrides.ini:/etc/php/7.3/fpm/conf.d/99-overrides.ini
   links:
     - myapp-mysql
+    # - myapp-mailhog
 
 myapp-phpmyadmin:
   image: phpmyadmin/phpmyadmin
@@ -64,11 +65,16 @@ myapp-phpmyadmin:
     - 8080:80
   environment:
     - PMA_HOST=myapp-mysql
+    - MAX_EXECUTION_TIME=86400
+    - UPLOAD_LIMIT=100M
+    # - PMA_CONFIG_BASE64=PD9waHAKJGNmZ1snTG9naW5Db29raWVWYWxpZGl0eSddID0gMzYwMCAqIDI0ICogMzY1Ow==
   links:
     - myapp-mysql
+  volumes:
+    - ./phpmyadmin/config.inc.php:/var/www/html/config.inc.php
 
-myapp-mailhog:
-  image: phpdockerio/mailhog:latest
-  container_name: myapp-mailhog
-  ports:
-    - "8125:8025"
+# myapp-mailhog:
+#   image: mailhog/mailhog:latest
+#   container_name: myapp-mailhog
+#   ports:
+#     - "8125:8025"
