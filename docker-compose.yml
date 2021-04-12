@@ -67,11 +67,23 @@ myapp-phpmyadmin:
     - PMA_HOST=myapp-mysql
     - MAX_EXECUTION_TIME=86400
     - UPLOAD_LIMIT=100M
+    - PMA_USER=root
+    - PMA_PASSWORD=123123
     # - PMA_CONFIG_BASE64=PD9waHAKJGNmZ1snTG9naW5Db29raWVWYWxpZGl0eSddID0gMzYwMCAqIDI0ICogMzY1Ow==
   links:
     - myapp-mysql
   volumes:
     - ./phpmyadmin/config.inc.php:/var/www/html/config.inc.php
+
+# myapp-quasar:
+#     build:
+#       context: .
+#       target: 'develop-stage'
+#     ports:
+#     - '8181:8080'
+#     volumes:
+#     - '.:/app'
+#     command: /bin/sh -c "yarn && quasar dev"
 
 # myapp-mailhog:
 #   image: mailhog/mailhog:latest
