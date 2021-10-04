@@ -74,7 +74,7 @@ services:
       - MYSQL_DATABASE=shop
       - MYSQL_USER=root
       - MYSQL_PASSWORD=123123
-    command: '--innodb_use_native_aio=0'
+    command: '--innodb_use_native_aio=0; --max_allowed_packet=32505856'
 
   myapp-mailhog:
     image: mailhog/mailhog:latest
