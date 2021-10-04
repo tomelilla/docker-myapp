@@ -277,3 +277,5 @@ submitted by @jeroenvdv
 `myapp-nginx | nginx: [emerg] open() "/var/www/myapp/logs/access.log" failed (2: No such file or directory)`
 
 This is caused by not installing CakePHP completely and can be fixed by creating the logs folder in your `myapp/cakephp` folder.
+
+docker-compose --env-file .env.homecare up -d
