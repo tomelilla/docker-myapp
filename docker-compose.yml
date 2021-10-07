@@ -19,18 +19,18 @@ services:
     depends_on:
       - myapp-php-fpm
 
-  myapp2-nginx:
-    image: nginx:latest
-    container_name: myapp2-nginx
-    volumes:
-      - ../${CAKEPHP2}:/var/www/myapp2
-      - ../html:/var/www/html
-      - ./logs:/var/www/logs
-      - ./nginx/nginx2.conf:/etc/nginx/conf.d/default.conf
-    ports:
-      - '7001:80'
-    depends_on:
-      - myapp-php-fpm
+  # myapp2-nginx:
+  #   image: nginx:latest
+  #   container_name: myapp2-nginx
+  #   volumes:
+  #     - ../${CAKEPHP2}:/var/www/myapp2
+  #     - ../html:/var/www/html
+  #     - ./logs:/var/www/logs
+  #     - ./nginx/nginx2.conf:/etc/nginx/conf.d/default.conf
+  #   ports:
+  #     - '7001:80'
+  #   depends_on:
+  #     - myapp-php-fpm
 
   myapp-php-fpm:
     image: php:7.2-fpm-buster
@@ -39,14 +39,28 @@ services:
     container_name: myapp-php-fpm
     volumes:
       - ../${CAKEPHP}:/var/www/myapp
-      - ../${CAKEPHP2}:/var/www/myapp2
+      # - ../${CAKEPHP2}:/var/www/myapp2
       - ./php-fpm/php-ini-overrides.ini:/usr/local/etc/php/conf.d/99-overrides.ini
     depends_on:
       - myapp-mysql
       - myapp-mailhog
 
+  myapp-nestjs:
+    container_name: myapp-nestjs
+    build: nestjs/
+    volumes:
+      - ../music-nestjs:/usr/src/app
+    depends_on:
+      - myapp-mysql
+      - myapp-mailhog
+    ports:
+      - 3000:3000
+    stdin_open: true
+    tty: true
+
   myapp-phpmyadmin:
     image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
     ports:
       - 8080:80
     environment:
