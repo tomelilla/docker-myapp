@@ -91,6 +91,13 @@ services:
     container_name: myapp-cockpit
     ports:
       - '8080:80'
+    environment:
+      COCKPIT_SESSION_NAME: cockpit
+      COCKPIT_SALT: BD876037-7169-428F-B7B3-D36F7C55841D
+      COCKPIT_DATABASE_SERVER: 'mongodb://db:27017'
+      COCKPIT_DATABASE_NAME: cockpit_master
+    depends_on:
+      - myapp-mongo
     volumes:
       - ../${COCKPIT}/storage:/var/www/html/storage
       - ../${COCKPIT}/config:/var/www/html/config
@@ -100,8 +107,16 @@ services:
       - ../${COCKPIT}/assets:/var/www/html/assets
 
   myapp-mongo:
-    image: mongo-express
+    image: 'mongo:latest'
     container_name: myapp-mongo
+    volumes:
+    - ../mongo-vol:/data/db
+
+  mongo-express:
+    image: 'mongo-express'
     ports:
-      - '3030:8081'
-    # environment:
+      - '8281:8081'
+    environment:
+      ME_CONFIG_MONGODB_SERVER: myapp-mongo
+    depends_on:
+      - myapp-mongo
