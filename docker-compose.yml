@@ -75,27 +75,27 @@ services:
       - '1025:1025'
       - '8125:8025'
 
-  myapp-redis:
-    image: redis:latest
-    container_name: myapp-redis
-    volumes:
-      - ../redis-data:/data
-    ports:
-      - '6379:6379'
+  # myapp-redis:
+  #   image: redis:latest
+  #   container_name: myapp-redis
+  #   volumes:
+  #     - ../redis-data:/data
+  #   ports:
+  #     - '6379:6379'
 
-  myapp-nestjs:
-    container_name: myapp-nestjs
-    build: nestjs/
-    volumes:
-      - ../${NEST}:/usr/src/app
-    # command: yarn start:dev
-    depends_on:
-      - myapp-mysql
-      - myapp-mailhog
-    ports:
-      - 3000:3000
-    stdin_open: true
-    tty: true
+  # myapp-nestjs:
+  #   container_name: myapp-nestjs
+  #   build: nestjs/
+  #   volumes:
+  #     - ../${NEST}:/usr/src/app
+  #   # command: yarn start:dev
+  #   depends_on:
+  #     - myapp-mysql
+  #     - myapp-mailhog
+  #   ports:
+  #     - 3000:3000
+  #   stdin_open: true
+  #   tty: true
 
   # myapp-cms:
   #   image: agentejo/cockpit
