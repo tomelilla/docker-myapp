@@ -1,0 +1,45 @@
+version: '3'
+services:
+  mysql:
+    image: mysql/mysql-server:latest
+    container_name: point-mysql
+    volumes:
+      - ../mysql8:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=12345678
+      - MYSQL_DATABASE=mydb
+      - MYSQL_ROOT_HOST=%
+    ports:
+      - 8306:3306
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    ports:
+      - 8280:80
+    environment:
+      - PMA_HOST=mysql
+      - MAX_EXECUTION_TIME=86400
+      - UPLOAD_LIMIT=100M
+      - PMA_USER=root
+      - PMA_PASSWORD=12345678
+    depends_on:
+      - mysql
+    volumes:
+      - ./phpmyadmin/config.inc.php:/var/www/html/config.inc.php
+
+
+  redis:
+    image: redis
+    container_name: point-redis
+    volumes:
+      - ./data/redis-data:/data
+    ports:
+      - 6379:6379
+  # adminer:
+  #   image: adminer
+  #   container_name: mysql-adminer
+  #   depends_on:
+  #     - mysql
+  #   ports:
+  #     - 8010:8080

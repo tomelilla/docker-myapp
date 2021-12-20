@@ -40,6 +40,47 @@ $sessionValidity = 3600 * 24 * 365; // one year
 $cfg['LoginCookieValidity'] = $sessionValidity;
 ini_set('session.gc_maxlifetime', $sessionValidity);
 
+/**
+ * allow login to any user entered server in cookie based authentication
+ *
+ * @global boolean $cfg['AllowArbitraryServer']
+ */
+$cfg['AllowArbitraryServer'] = true; //預設是false,改成true
+/*
+ * First server
+ */
+ //如果要管理，更多個mysql伺服器，就修改$connect_hosts這個陣列就行了
+ $connect_hosts = array(
+	'1'=>array(
+		 "host"   => "myapp-mysql",  //伺服器1
+		 "user"   => "root",
+		 "password" => "123123"
+		 ),
+	'2' => array(
+		 "host"   => "point-mysql", //伺服器2
+		 "user"   => "root",
+		 "password" => "12345678",
+		 )
+	);
+
+for ($i=1;$i<=count($connect_hosts);$i++) {
+
+/* Authentication type */
+$cfg['Servers'][$i]['auth_type'] = 'cookie';
+/* Server parameters */
+$cfg['Servers'][$i]['host'] = $connect_hosts[$i]['host'];   //修改host
+$cfg['Servers'][$i]['connect_type'] = 'tcp';
+$cfg['Servers'][$i]['compress'] = false;
+/* Select mysqli if your server has it */
+$cfg['Servers'][$i]['extension'] = 'mysql';
+$cfg['Servers'][$i]['AllowNoPassword'] = true;
+$cfg['Servers'][$i]['user'] = $connect_hosts[$i]['user'];  //修改使用者名稱
+$cfg['Servers'][$i]['password'] = $connect_hosts[$i]['password']; //密碼
+/* rajk - for blobstreaming */
+$cfg['Servers'][$i]['bs_garbage_threshold'] = 50;
+$cfg['Servers'][$i]['bs_repository_threshold'] = '32M';
+$cfg['Servers'][$i]['bs_temp_blob_timeout'] = 600;
+$cfg['Servers'][$i]['bs_temp_log_threshold'] = '32M';
 
 /**
  * phpMyAdmin configuration storage settings.

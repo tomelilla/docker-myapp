@@ -15,4 +15,6 @@ RUN apk update \
 
 EXPOSE 3000
 
+CMD ["yarn"]
+# CMD ["yarn start:dev"]
 CMD ["/bin/ash"]

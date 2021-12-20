@@ -4,7 +4,7 @@
 
 # docker-compose build -- rebuild
 # docker-compose --env-file .env.homecare up -d
-version: '3'
+version: '3.8'
 services:
   myapp-nginx:
     image: nginx:latest
@@ -22,30 +22,19 @@ services:
       - myapp-php-fpm
 
   myapp-php-fpm:
-    image: php:7.2-fpm-buster
+    image: php:7.4-fpm-buster
     build: php-fpm/
     # dockerfile: php-fpm/Dockerfile
     container_name: myapp-php-fpm
     volumes:
       - ../${CAKEPHP}:/var/www/myapp
       - ../${CAKEPHP2}:/var/www/myapp2
+      - ../${COCKPIT}:/var/www/cockpit
       - ./php-fpm/php-ini-overrides.ini:/usr/local/etc/php/conf.d/99-overrides.ini
     depends_on:
       - myapp-mysql
       - myapp-mailhog
-
-  myapp-nestjs:
-    container_name: myapp-nestjs
-    build: nestjs/
-    volumes:
-      - ../music-nestjs:/usr/src/app
-    depends_on:
-      - myapp-mysql
-      - myapp-mailhog
-    ports:
-      - 3000:3000
-    stdin_open: true
-    tty: true
+      - myapp-redis
 
   myapp-phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -71,10 +60,10 @@ services:
       - ./mysql/my.cnf:/etc/mysql/my.cnf
       - ../sql:/home/sql
     ports:
-      - '8106:3306'
+      - '3106:3306'
     environment:
       - MYSQL_ROOT_PASSWORD=123123
-      - MYSQL_DATABASE=shop
+      # - MYSQL_DATABASE=shop
       - MYSQL_USER=root
       - MYSQL_PASSWORD=123123
     command: '--innodb_use_native_aio=0; --max_allowed_packet=32505856'
@@ -86,37 +75,61 @@ services:
       - '1025:1025'
       - '8125:8025'
 
-  myapp-cms:
-    image: agentejo/cockpit
-    container_name: myapp-cockpit
-    ports:
-      - '8080:80'
-    environment:
-      COCKPIT_SESSION_NAME: cockpit
-      COCKPIT_SALT: BD876037-7169-428F-B7B3-D36F7C55841D
-      COCKPIT_DATABASE_SERVER: 'mongodb://db:27017'
-      COCKPIT_DATABASE_NAME: cockpit_master
-    depends_on:
-      - myapp-mongo
+  myapp-redis:
+    image: redis:latest
+    container_name: myapp-redis
     volumes:
-      - ../${COCKPIT}/storage:/var/www/html/storage
-      - ../${COCKPIT}/config:/var/www/html/config
-      - ../${COCKPIT}/addons:/var/www/html/addons
-      - ../${COCKPIT}/lib:/var/www/html/lib
-      - ../${COCKPIT}/modules:/var/www/html/modules
-      - ../${COCKPIT}/assets:/var/www/html/assets
-
-  myapp-mongo:
-    image: 'mongo:latest'
-    container_name: myapp-mongo
-    volumes:
-    - ../mongo-vol:/data/db
-
-  mongo-express:
-    image: 'mongo-express'
+      - ../redis-data:/data
     ports:
-      - '8281:8081'
-    environment:
-      ME_CONFIG_MONGODB_SERVER: myapp-mongo
+      - '6379:6379'
+
+  myapp-nestjs:
+    container_name: myapp-nestjs
+    build: nestjs/
+    volumes:
+      - ../${NEST}:/usr/src/app
+    # command: yarn start:dev
     depends_on:
-      - myapp-mongo
+      - myapp-mysql
+      - myapp-mailhog
+    ports:
+      - 3000:3000
+    stdin_open: true
+    tty: true
+
+  # myapp-cms:
+  #   image: agentejo/cockpit
+  #   container_name: myapp-cockpit
+  #   ports:
+  #     - '8080:80'
+  #   # environment:
+  #   #   COCKPIT_SESSION_NAME: cockpit
+  #   #   COCKPIT_SALT: BD876037-7169-428F-B7B3-D36F7C55841D
+  #   #   COCKPIT_DATABASE_SERVER: 'mongodb://myapp-mongo:27017'
+  #   #   COCKPIT_DATABASE_NAME: cockpit_master
+  #   depends_on:
+  #     - myapp-mongo
+  #     - myapp-mysql
+  #   volumes:
+  #     - ../${COCKPIT}:/var/www/html
+  #     - ../${COCKPIT}/storage:/var/www/html/storage
+  #     # - ../${COCKPIT}/config:/var/www/html/config
+  #     # - ../${COCKPIT}/addons:/var/www/html/addons
+  #     # - ../${COCKPIT}/lib:/var/www/html/lib
+  #     # - ../${COCKPIT}/modules:/var/www/html/modules
+  #     # - ../${COCKPIT}/assets:/var/www/html/assets
+
+  # myapp-mongo:
+  #   image: 'mongo:latest'
+  #   container_name: myapp-mongo
+  #   volumes:
+  #   - ../mongo-vol:/data/db
+
+  # mongo-express:
+  #   image: 'mongo-express'
+  #   ports:
+  #     - '8281:8081'
+  #   environment:
+  #     ME_CONFIG_MONGODB_SERVER: myapp-mongo
+  #   depends_on:
+  #     - myapp-mongo
