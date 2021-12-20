@@ -1,5 +1,0 @@
-{
-    "require": {
-        "cakephp/acl": "^0.7.0"
-    }
-}
